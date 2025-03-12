@@ -2,38 +2,8 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on Vadim Pidoshva</title>
-    <link>/tags/</link>
+    <link>https://geleus.io/tags/</link>
     <description>Recent content in Tags on Vadim Pidoshva</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <copyright>© geleus</copyright>
-    <lastBuildDate>Mon, 24 Feb 2025 14:03:15 -0700</lastBuildDate><atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>[python]</title>
-      <link>/tags/python/</link>
-      <pubDate>Mon, 24 Feb 2025 14:03:15 -0700</pubDate>
-      
-      <guid>/tags/python/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>[MATLAB]</title>
-      <link>/tags/matlab/</link>
-      <pubDate>Mon, 08 Aug 2022 03:28:30 -0600</pubDate>
-      
-      <guid>/tags/matlab/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>[c&#43;&#43;]</title>
-      <link>/tags/c&#43;&#43;/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/c&#43;&#43;/</guid>
-      <description></description>
-    </item>
-    
+    <generator>Hugo -- gohugo.io</generator><atom:link href="https://geleus.io/tags/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>
