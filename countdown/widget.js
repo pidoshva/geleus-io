@@ -48,6 +48,27 @@ if (diff <= 0) {
     done.font = Font.boldSystemFont(18);
     done.textColor = Color.white();
     done.centerAlignText();
+} else if (diff < 86400000) {
+    // Final 24 hours: live HH:MM:SS timer (iOS animates this in real time)
+    const title = widget.addText("REUNION IN PARADISE");
+    title.font = Font.mediumMonospacedSystemFont(10);
+    title.textColor = new Color("#ffffff", 0.85);
+    title.centerAlignText();
+
+    widget.addSpacer(8);
+
+    const timer = widget.addDate(TARGET);
+    timer.applyTimerStyle();
+    timer.font = Font.boldMonospacedSystemFont(30);
+    timer.textColor = Color.white();
+    timer.centerAlignText();
+
+    widget.addSpacer(8);
+
+    const eta = widget.addText("today · 2:00 PM");
+    eta.font = Font.regularMonospacedSystemFont(9);
+    eta.textColor = new Color("#ffffff", 0.6);
+    eta.centerAlignText();
 } else {
     const title = widget.addText("REUNION IN PARADISE");
     title.font = Font.mediumMonospacedSystemFont(10);
@@ -58,26 +79,36 @@ if (diff <= 0) {
 
     const days = Math.floor(diff / 86400000);
     const hours = Math.floor(diff / 3600000) % 24;
+    const minutes = Math.floor(diff / 60000) % 60;
     const big = widget.addText(String(days));
-    big.font = Font.boldMonospacedSystemFont(42);
+    big.font = Font.boldMonospacedSystemFont(38);
     big.textColor = Color.white();
     big.centerAlignText();
 
-    const sub = widget.addText(days === 1 ? "day to go" : "days to go");
+    const sub = widget.addText(days === 1 ? "day" : "days");
     sub.font = Font.mediumMonospacedSystemFont(11);
     sub.textColor = new Color("#ffffff", 0.75);
     sub.centerAlignText();
 
-    widget.addSpacer(6);
+    widget.addSpacer(5);
 
-    const eta = widget.addText("+" + hours + "h · Jul 24, 2:00 PM");
+    const pad = n => (n < 10 ? "0" : "") + n;
+    const hm = widget.addText(pad(hours) + " h  " + pad(minutes) + " m");
+    hm.font = Font.boldMonospacedSystemFont(14);
+    hm.textColor = new Color("#ffffff", 0.9);
+    hm.centerAlignText();
+
+    widget.addSpacer(5);
+
+    const eta = widget.addText("Jul 24 · 2:00 PM");
     eta.font = Font.regularMonospacedSystemFont(9);
     eta.textColor = new Color("#ffffff", 0.6);
     eta.centerAlignText();
 }
 
-// ask iOS to refresh roughly hourly (also rotates the photo)
-widget.refreshAfterDate = new Date(Date.now() + 60 * 60 * 1000);
+// ask iOS to refresh every ~15 minutes so hours/minutes stay current
+// (the photo rotates with each refresh too)
+widget.refreshAfterDate = new Date(Date.now() + 15 * 60 * 1000);
 
 if (config.runsInWidget) {
     Script.setWidget(widget);
