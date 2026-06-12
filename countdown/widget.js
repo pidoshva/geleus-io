@@ -78,8 +78,6 @@ if (diff <= 0) {
     widget.addSpacer(6);
 
     const days = Math.floor(diff / 86400000);
-    const hours = Math.floor(diff / 3600000) % 24;
-    const minutes = Math.floor(diff / 60000) % 60;
     const big = widget.addText(String(days));
     big.font = Font.boldMonospacedSystemFont(38);
     big.textColor = Color.white();
@@ -92,11 +90,16 @@ if (diff <= 0) {
 
     widget.addSpacer(5);
 
-    const pad = n => (n < 10 ? "0" : "") + n;
-    const hm = widget.addText(pad(hours) + " h  " + pad(minutes) + " m");
-    hm.font = Font.boldMonospacedSystemFont(14);
-    hm.textColor = new Color("#ffffff", 0.9);
-    hm.centerAlignText();
+    // Live HH:MM:SS for the sub-day remainder: a system timer aimed at a
+    // synthetic date (now + remainder). iOS animates it every second.
+    // Quirk: right as it hits zero it counts back up for a few minutes
+    // until the next widget refresh rolls the day number over.
+    const remainder = diff % 86400000;
+    const hms = widget.addDate(new Date(Date.now() + remainder));
+    hms.applyTimerStyle();
+    hms.font = Font.boldMonospacedSystemFont(15);
+    hms.textColor = new Color("#ffffff", 0.9);
+    hms.centerAlignText();
 
     widget.addSpacer(5);
 
