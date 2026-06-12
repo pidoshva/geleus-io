@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="theme-color" content="#000000">
+    <title>Reunion in Paradise</title>
+    <!-- Link preview (chat apps read these static tags, not the JS config) -->
+    <meta property="og:title" content="Reunion in Paradise">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://geleus.io/countdown/">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Reunion in Paradise">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            font-family: 'SF Mono', 'Fira Code', Monaco, Consolas, monospace;
+            color: #fff;
+            overflow: hidden;
+            background: #000;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        .bg {
+            position: fixed;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 2s ease-in-out;
+            z-index: 0;
+        }
+
+        .bg.visible {
+            opacity: 1;
+        }
+
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            z-index: 1;
+        }
+
+        .content {
+            position: relative;
+            z-index: 2;
+            height: 100%;
+            height: 100dvh; /* tracks mobile browser chrome expanding/collapsing */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+            padding-bottom: calc(20px + env(safe-area-inset-bottom));
+        }
+
+        .title {
+            font-size: clamp(14px, 2.5vw, 22px);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.85);
+            text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
+            margin-bottom: 40px;
+        }
+
+        .timer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .days-value {
+            font-size: clamp(88px, 22vw, 170px);
+            font-weight: 700;
+            line-height: 1;
+            text-shadow: 0 4px 24px rgba(0, 0, 0, 0.7);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .divider {
+            width: min(320px, 70vw);
+            height: 1px;
+            background: rgba(255, 255, 255, 0.4);
+            margin: 30px 0;
+        }
+
+        .hms {
+            display: flex;
+            align-items: flex-start;
+            gap: clamp(10px, 3vw, 24px);
+        }
+
+        .unit .value {
+            font-size: clamp(40px, 9vw, 84px);
+            font-weight: 700;
+            line-height: 1;
+            text-shadow: 0 4px 24px rgba(0, 0, 0, 0.7);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .colon {
+            font-size: clamp(40px, 9vw, 84px);
+            font-weight: 700;
+            line-height: 1;
+            color: rgba(255, 255, 255, 0.5);
+            text-shadow: 0 4px 24px rgba(0, 0, 0, 0.7);
+        }
+
+        .label {
+            margin-top: 10px;
+            font-size: clamp(11px, 1.5vw, 14px);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .target-date {
+            margin-top: 44px;
+            font-size: clamp(12px, 1.8vw, 16px);
+            letter-spacing: 2px;
+            color: rgba(255, 255, 255, 0.75);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
+        }
+
+        .done {
+            font-size: clamp(28px, 6.5vw, 64px);
+            font-weight: 700;
+            text-shadow: 0 4px 24px rgba(0, 0, 0, 0.7);
+        }
+
+        .done-sub {
+            margin-top: 16px;
+            font-size: clamp(13px, 2vw, 18px);
+            letter-spacing: 2px;
+            color: rgba(255, 255, 255, 0.8);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
+        }
+
+        .gif-frame {
+            position: relative;
+            margin-top: 32px;
+            width: min(88vw, 480px);
+            aspect-ratio: 16 / 10;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55);
+        }
+
+        .gif {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 1.2s ease-in-out;
+        }
+
+        .gif.visible {
+            opacity: 1;
+        }
+
+        .credit {
+            position: fixed;
+            bottom: calc(14px + env(safe-area-inset-bottom));
+            right: calc(18px + env(safe-area-inset-right));
+            z-index: 2;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.55);
+        }
+
+        .credit a {
+            color: rgba(255, 255, 255, 0.75);
+            text-decoration: none;
+        }
+
+        .credit a:hover {
+            text-decoration: underline;
+        }
+
+        /* Phones */
+        @media (max-width: 480px) {
+            .title {
+                margin-bottom: 48px;
+            }
+
+            .divider {
+                margin: 24px 0;
+            }
+
+            .target-date {
+                margin-top: 48px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg" id="bgA"></div>
+    <div class="bg" id="bgB"></div>
+    <div class="overlay"></div>
+
+    <div class="content">
+        <div class="title" id="title"></div>
+        <div class="timer" id="timer">
+            <div class="days-block">
+                <div class="days-value" id="days">--</div>
+                <div class="label">days</div>
+            </div>
+            <div class="divider"></div>
+            <div class="hms">
+                <div class="unit"><div class="value" id="hours">--</div><div class="label">hours</div></div>
+                <div class="colon">:</div>
+                <div class="unit"><div class="value" id="minutes">--</div><div class="label">minutes</div></div>
+                <div class="colon">:</div>
+                <div class="unit"><div class="value" id="seconds">--</div><div class="label">seconds</div></div>
+            </div>
+        </div>
+        <div class="done" id="done" style="display:none"></div>
+        <div class="done-sub" id="doneSub" style="display:none"></div>
+        <div class="gif-frame" id="gifFrame" style="display:none">
+            <img class="gif" id="gifA" alt="relaxing scene">
+            <img class="gif" id="gifB" alt="">
+        </div>
+        <div class="target-date" id="targetDate"></div>
+    </div>
+
+    <div class="credit" id="credit"></div>
+
+    <script>
+        // ------------------------------------------------------------------
+        // Configuration — edit these values to change the countdown
+        // ------------------------------------------------------------------
+        var config = {
+            // Target date/time (viewer's local timezone)
+            target: new Date(2026, 6, 24, 14, 0, 0),   // July 24, 2026 2:00 PM
+            // Shown on the page. If you change it, also update <title> and
+            // the og:title / twitter:title meta tags for link previews.
+            title: 'Reunion in Paradise',
+            doneMessage: 'Aloha — it\'s island time 🌴',
+            doneSub: 'The countdown is over. The relaxing begins.'
+        };
+
+        // Maui, Hawaii photos from Unsplash (free license). A random photo is
+        // shown on every visit, and it rotates again every hour on the hour.
+        var photos = [
+            { id: 'photo-1542259009477-d625272157b7', author: 'Ganapathy Kumar', link: 'https://unsplash.com/photos/7782WXBriyM' },
+            { id: 'photo-1556206079-747a7a424d3d',    author: 'Pascal Debrunner', link: 'https://unsplash.com/photos/9K5gSWen4cU' },
+            { id: 'photo-1547537069-537b37a02069',    author: 'Zetong Li', link: 'https://unsplash.com/photos/6xRVVRKvmu4' },
+            { id: 'photo-1678156913491-d9a6b5f33db1', author: 'Luke Scarpino', link: 'https://unsplash.com/photos/ngRNC_h2G8E' },
+            { id: 'photo-1558983731-16245204a27d',    author: 'Pascal Debrunner', link: 'https://unsplash.com/photos/M5zYk_lrb7s' },
+            { id: 'photo-1558108401-e45afa05deb8',    author: 'Andrew Bain', link: 'https://unsplash.com/photos/RpRI8QJFr-s' },
+            { id: 'photo-1562191326-7a067408be55',    author: 'Neora Aylon', link: 'https://unsplash.com/photos/5jErKxqb-Dk' },
+            { id: 'photo-1546527848-5f786ed0f030',    author: 'Paola Galimberti', link: 'https://unsplash.com/photos/BVw0Mq8_fwA' },
+            { id: 'photo-1507032336878-13f159192baa', author: 'Rina Miele', link: 'https://unsplash.com/photos/-7_yLivAnMc' },
+            { id: 'photo-1705868259358-131559d1fff3', author: "Carol Highsmith's America", link: 'https://unsplash.com/photos/HyPmv13rEtE' },
+            { id: 'photo-1572496311289-a56da5e8e4fd', author: 'Derek Baumgartner', link: 'https://unsplash.com/photos/xZTQ6f4xGsU' },
+            { id: 'photo-1580433086590-5c50bce22c77', author: 'William Zhang', link: 'https://unsplash.com/photos/oedrE1YNCsk' },
+            { id: 'photo-1506691682851-cd07515096b9', author: 'Tim Foster', link: 'https://unsplash.com/photos/b2UiH1wU6G4' },
+            { id: 'photo-1450045439515-ff27c2f2e6b1', author: 'Abigail Lynn', link: 'https://unsplash.com/photos/9JrBiphz0e0' }
+        ];
+
+        // Relaxing scenic GIFs (Tenor CDN) shown once the countdown finishes,
+        // rotating randomly every few seconds.
+        var gifs = [
+            'https://media.tenor.com/zP71zGJgjGkAAAAC/ocean-waves-ocean-waves-relaxing.gif',
+            'https://media.tenor.com/HoshSlUj4vIAAAAC/sea-ocean.gif',
+            'https://media.tenor.com/NM_CHQ5o08gAAAAC/sunset-sea.gif',
+            'https://media.tenor.com/JP6TFsgtXHEAAAAC/full-moon.gif',
+            'https://media.tenor.com/VPaX1W3Lx4kAAAAC/beach-island.gif',
+            'https://media.tenor.com/61jNqVidI-YAAAAC/ocean-sunset.gif',
+            'https://media.tenor.com/15FaNZDoZh0AAAAC/calm-ocean.gif',
+            'https://media.tenor.com/QHnRyswEl6wAAAAC/waves-hebrides.gif',
+            'https://media.tenor.com/BHQT1UqCtDoAAAAC/beach-relaxing.gif'
+        ];
+
+        var HOUR_MS = 60 * 60 * 1000;
+        var bgLayers = [document.getElementById('bgA'), document.getElementById('bgB')];
+        var activeLayer = 0;
+
+        function photoUrl(photo) {
+            var width = Math.min(Math.ceil(window.screen.width * (window.devicePixelRatio || 1)), 2560);
+            return 'https://images.unsplash.com/' + photo.id + '?auto=format&fit=crop&w=' + width + '&q=80';
+        }
+
+        // Random pick on every load and every hourly rotation, never
+        // repeating the photo currently on screen.
+        var lastPhotoIndex = -1;
+        function randomPhoto() {
+            var i;
+            do {
+                i = Math.floor(Math.random() * photos.length);
+            } while (i === lastPhotoIndex && photos.length > 1);
+            lastPhotoIndex = i;
+            return photos[i];
+        }
+
+        var creditPhoto = null;
+        function updateCredit() {
+            if (!creditPhoto) return;
+            var html = 'Maui, Hawaiʻi — photo by <a href="' + creditPhoto.link +
+                '?utm_source=geleus&utm_medium=referral" target="_blank" rel="noopener">' + creditPhoto.author +
+                '</a> on <a href="https://unsplash.com/?utm_source=geleus&utm_medium=referral" target="_blank" rel="noopener">Unsplash</a>';
+            if (doneStarted) {
+                html += ' · GIFs via <a href="https://tenor.com" target="_blank" rel="noopener">Tenor</a>';
+            }
+            document.getElementById('credit').innerHTML = html;
+        }
+
+        function showPhoto(photo) {
+            var next = bgLayers[1 - activeLayer];
+            var current = bgLayers[activeLayer];
+            var img = new Image();
+            img.onload = function () {
+                next.style.backgroundImage = 'url("' + img.src + '")';
+                next.classList.add('visible');
+                current.classList.remove('visible');
+                activeLayer = 1 - activeLayer;
+                creditPhoto = photo;
+                updateCredit();
+            };
+            img.src = photoUrl(photo);
+        }
+
+        function scheduleNextRotation() {
+            var msUntilNextHour = HOUR_MS - (Date.now() % HOUR_MS);
+            setTimeout(function () {
+                showPhoto(randomPhoto());
+                scheduleNextRotation();
+            }, msUntilNextHour + 1000);
+        }
+
+        var gifLayers = [document.getElementById('gifA'), document.getElementById('gifB')];
+        var activeGifLayer = 0;
+        var lastGifIndex = -1;
+
+        function showRandomGif() {
+            var i;
+            do {
+                i = Math.floor(Math.random() * gifs.length);
+            } while (i === lastGifIndex && gifs.length > 1);
+            lastGifIndex = i;
+            var next = gifLayers[1 - activeGifLayer];
+            var current = gifLayers[activeGifLayer];
+            var img = new Image();
+            img.onload = function () {
+                next.src = img.src;
+                next.classList.add('visible');
+                current.classList.remove('visible');
+                activeGifLayer = 1 - activeGifLayer;
+            };
+            img.src = gifs[i];
+        }
+
+        var doneStarted = false;
+        function startDoneMode() {
+            if (doneStarted) return;
+            doneStarted = true;
+            document.getElementById('timer').style.display = 'none';
+            document.getElementById('targetDate').style.display = 'none';
+            var done = document.getElementById('done');
+            done.textContent = config.doneMessage;
+            done.style.display = 'block';
+            var sub = document.getElementById('doneSub');
+            sub.textContent = config.doneSub;
+            sub.style.display = 'block';
+            document.getElementById('gifFrame').style.display = 'block';
+            updateCredit();
+            showRandomGif();
+            setInterval(showRandomGif, 12000);
+        }
+
+        function pad(n) {
+            return n < 10 ? '0' + n : '' + n;
+        }
+
+        function tick() {
+            var diff = config.target.getTime() - Date.now();
+            if (diff <= 0) {
+                startDoneMode();
+                return;
+            }
+            document.getElementById('days').textContent = Math.floor(diff / 86400000);
+            document.getElementById('hours').textContent = pad(Math.floor(diff / 3600000) % 24);
+            document.getElementById('minutes').textContent = pad(Math.floor(diff / 60000) % 60);
+            document.getElementById('seconds').textContent = pad(Math.floor(diff / 1000) % 60);
+            setTimeout(tick, 1000 - (Date.now() % 1000));
+        }
+
+        document.getElementById('title').textContent = config.title;
+        document.getElementById('targetDate').textContent = config.target.toLocaleString(undefined, {
+            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+            hour: 'numeric', minute: '2-digit'
+        });
+
+        showPhoto(randomPhoto());
+        scheduleNextRotation();
+        tick();
+    </script>
+</body>
+</html>
