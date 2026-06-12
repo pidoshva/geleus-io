@@ -243,6 +243,7 @@
 
     <div class="credit" id="credit"></div>
 
+    <script src="photos.js"></script>
     <script>
         // ------------------------------------------------------------------
         // Configuration — edit these values to change the countdown
@@ -257,24 +258,9 @@
             doneSub: 'The countdown is over. The relaxing begins.'
         };
 
-        // Maui, Hawaii photos from Unsplash (free license). A random photo is
-        // shown on every visit, and it rotates again every hour on the hour.
-        var photos = [
-            { id: 'photo-1542259009477-d625272157b7', author: 'Ganapathy Kumar', link: 'https://unsplash.com/photos/7782WXBriyM' },
-            { id: 'photo-1556206079-747a7a424d3d',    author: 'Pascal Debrunner', link: 'https://unsplash.com/photos/9K5gSWen4cU' },
-            { id: 'photo-1547537069-537b37a02069',    author: 'Zetong Li', link: 'https://unsplash.com/photos/6xRVVRKvmu4' },
-            { id: 'photo-1678156913491-d9a6b5f33db1', author: 'Luke Scarpino', link: 'https://unsplash.com/photos/ngRNC_h2G8E' },
-            { id: 'photo-1558983731-16245204a27d',    author: 'Pascal Debrunner', link: 'https://unsplash.com/photos/M5zYk_lrb7s' },
-            { id: 'photo-1558108401-e45afa05deb8',    author: 'Andrew Bain', link: 'https://unsplash.com/photos/RpRI8QJFr-s' },
-            { id: 'photo-1562191326-7a067408be55',    author: 'Neora Aylon', link: 'https://unsplash.com/photos/5jErKxqb-Dk' },
-            { id: 'photo-1546527848-5f786ed0f030',    author: 'Paola Galimberti', link: 'https://unsplash.com/photos/BVw0Mq8_fwA' },
-            { id: 'photo-1507032336878-13f159192baa', author: 'Rina Miele', link: 'https://unsplash.com/photos/-7_yLivAnMc' },
-            { id: 'photo-1705868259358-131559d1fff3', author: "Carol Highsmith's America", link: 'https://unsplash.com/photos/HyPmv13rEtE' },
-            { id: 'photo-1572496311289-a56da5e8e4fd', author: 'Derek Baumgartner', link: 'https://unsplash.com/photos/xZTQ6f4xGsU' },
-            { id: 'photo-1580433086590-5c50bce22c77', author: 'William Zhang', link: 'https://unsplash.com/photos/oedrE1YNCsk' },
-            { id: 'photo-1506691682851-cd07515096b9', author: 'Tim Foster', link: 'https://unsplash.com/photos/b2UiH1wU6G4' },
-            { id: 'photo-1450045439515-ff27c2f2e6b1', author: 'Abigail Lynn', link: 'https://unsplash.com/photos/9JrBiphz0e0' }
-        ];
+        // The Maui photo pool lives in photos.js (var photos) — hundreds of
+        // verified Unsplash images. A random one is shown on every visit,
+        // rotating again every hour on the hour.
 
         // Relaxing scenic GIFs (Tenor CDN) shown once the countdown finishes,
         // rotating randomly every few seconds.
