@@ -10,5 +10,7 @@ terminal résumé itself lives in the `pidoshva.github.io` repo (`js/resume.js`,
   geleus.io/countdown/ — leave it alone.
 - `index.xml`, `sitemap.xml`, `categories/`, `tags/` are leftover Hugo feeds from the old build; harmless.
 
+**Roadmap for this domain (api.geleus.io + dashboard first):** see [`PLAN.md`](PLAN.md).
+
 To edit the résumé content or commands: see `pidoshva.github.io/js/resume.js` and that repo's
 ARCHITECTURE.md §3 (section 5 — resume).
